@@ -3,542 +3,333 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Mi pequeño cambio en familia</title>
+<title>Descubrir mi familia</title>
 
 <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
 
 <style>
-
-*{
-    box-sizing:border-box;
+:root{
+  --azul:#2f638d;
+  --texto:#26364a;
+  --verde:#edf8f1;
+  --blanco:#fff;
 }
-
+*{box-sizing:border-box}
 body{
-    margin:0;
-    font-family:Arial, sans-serif;
-    background:#f3f7fb;
-    color:#26354a;
+  margin:0;
+  font-family:Arial,Helvetica,sans-serif;
+  background:#eef2f6;
+  color:var(--texto);
 }
-
 .contenedor{
-    max-width:700px;
-    margin:30px auto;
-    padding:20px;
+  max-width:760px;
+  margin:0 auto;
+  padding:18px;
 }
-
+.encabezado{
+  background:var(--azul);
+  color:white;
+  border-radius:28px;
+  padding:22px 18px;
+  text-align:center;
+  font-size:clamp(26px,6vw,42px);
+  font-weight:800;
+}
 .tarjeta{
-    background:white;
-    border-radius:25px;
-    padding:30px;
-    box-shadow:0 8px 30px rgba(0,0,0,.12);
+  background:white;
+  border-radius:28px;
+  padding:24px;
+  margin-top:20px;
+  box-shadow:0 8px 30px #00000012;
 }
-
-h1{
-    text-align:center;
-    color:#31577c;
-    margin-bottom:5px;
+h2{text-align:center;font-size:clamp(24px,5vw,34px)}
+p{font-size:20px;line-height:1.5}
+.botones{
+  display:grid;
+  gap:12px;
+  margin-top:18px;
 }
-
-.subtitulo{
-    text-align:center;
-    color:#657589;
-    margin-bottom:25px;
+button,.archivo{
+  border:0;
+  border-radius:16px;
+  padding:16px;
+  font-size:18px;
+  font-weight:700;
+  cursor:pointer;
+  background:var(--azul);
+  color:white;
+  text-align:center;
 }
-
-.caja{
-    border:3px dashed #9bb8d1;
-    border-radius:18px;
-    padding:25px;
-    text-align:center;
-}
-
-input[type="file"]{
-    width:100%;
-    padding:15px;
-    font-size:16px;
-}
-
+.archivo{display:block}
+input[type=file]{display:none}
+#estado{text-align:center;font-weight:700;margin:18px 0}
 #vista{
-    display:none;
-    width:100%;
-    margin-top:20px;
-    border-radius:15px;
+  max-width:100%;
+  max-height:360px;
+  display:none;
+  margin:15px auto;
+  border-radius:18px;
 }
-
-button{
-    width:100%;
-    margin-top:20px;
-    padding:16px;
-    border:none;
-    border-radius:15px;
-    background:#3978a8;
-    color:white;
-    font-size:18px;
-    font-weight:bold;
-    cursor:pointer;
+#resultado{display:none}
+.resultado-cuerpo{
+  background:var(--verde);
+  border-radius:30px;
+  padding:24px;
+  text-align:center;
 }
-
-button:hover{
-    background:#285c85;
+.resultado-cuerpo h3{
+  color:#32634f;
+  font-size:clamp(27px,6vw,40px);
+  margin:15px 0;
 }
-
-#estado{
-    text-align:center;
-    margin-top:20px;
-    font-weight:bold;
+.resultado-cuerpo .mensaje{
+  font-size:clamp(21px,4.8vw,30px);
 }
-
-.resultado{
-    display:none;
-    margin-top:30px;
-    padding:30px;
-    border-radius:25px;
-    text-align:center;
-    background:#eef8f0;
+.resultado-cuerpo .reto{
+  background:white;
+  border-radius:20px;
+  padding:18px;
+  margin:20px 0;
+  font-size:20px;
 }
-
-.resultado h2{
-    color:#315f4b;
+.familia{
+  width:100%;
+  max-width:480px;
+  margin:0 auto;
 }
-
-.icono{
-    font-size:70px;
-}
-
-.mensaje{
-    font-size:18px;
-    line-height:1.6;
-}
-
-.accion{
-    background:white;
-    padding:15px;
-    border-radius:15px;
-    margin-top:15px;
-}
-
-.senal{
-    font-weight:bold;
-    margin-top:15px;
-}
-
+.familia svg{width:100%;height:auto}
+.pequeno{font-size:15px;color:#617080}
+.oculto{display:none}
 </style>
 </head>
 
 <body>
-
 <div class="contenedor">
 
-<div class="tarjeta">
+  <div class="encabezado">✨ DESCUBRIR MI FAMILIA</div>
 
-<h1>💙 Mi pequeño cambio en familia</h1>
+  <div class="tarjeta">
+    <h2>📷 Toma una foto del formulario</h2>
+    <p style="text-align:center">
+      El sistema leerá las respuestas y mostrará una ilustración relacionada con el tipo de familia que se busca fortalecer.
+    </p>
 
-<p class="subtitulo">
-Toma una fotografía de tu formulario y descubre
-qué aspecto de tu familia están buscando fortalecer.
-</p>
+    <div class="botones">
+      <label class="archivo">
+        📸 Tomar foto / elegir imagen
+        <input id="foto" type="file" accept="image/*" capture="environment">
+      </label>
+      <button id="analizar" disabled>🔎 Analizar formulario</button>
+    </div>
 
-<div class="caja">
+    <img id="vista" alt="Vista previa del formulario">
+    <div id="estado">Esperando una fotografía…</div>
 
-<p><strong>📸 Fotografía del formulario</strong></p>
+    <div id="textoOCR" class="oculto"></div>
+  </div>
 
-<input
-type="file"
-id="foto"
-accept="image/*"
-capture="environment"
->
+  <div id="resultado" class="tarjeta">
+    <h2>✅ ¡Formulario analizado!</h2>
+    <div class="resultado-cuerpo">
+      <div id="ilustracion" class="familia"></div>
+      <h3 id="titulo"></h3>
+      <p id="mensaje" class="mensaje"></p>
+      <div class="reto" id="reto"></div>
+      <p><strong>✨ Nuestra señal de avance:</strong><br><span id="avance"></span></p>
+    </div>
+  </div>
 
-<img id="vista">
-
+  <div class="tarjeta pequeno">
+    <strong>Nota:</strong> el análisis se realiza en el navegador. La fotografía no se envía a un servidor propio de esta página.
+  </div>
 </div>
-
-<button onclick="analizarFormulario()">
-✨ DESCUBRIR MI FAMILIA
-</button>
-
-<div id="estado"></div>
-
-<div id="resultado" class="resultado">
-
-<div id="icono" class="icono"></div>
-
-<h2 id="titulo"></h2>
-
-<p id="mensaje" class="mensaje"></p>
-
-<div id="accion" class="accion"></div>
-
-<div id="senal" class="senal"></div>
-
-</div>
-
-</div>
-
-</div>
-
 
 <script>
+const foto = document.getElementById("foto");
+const analizar = document.getElementById("analizar");
+const vista = document.getElementById("vista");
+const estado = document.getElementById("estado");
+const resultado = document.getElementById("resultado");
+const textoOCR = document.getElementById("textoOCR");
 
-const archivo = document.getElementById("foto");
+let archivoActual = null;
 
-archivo.addEventListener("change", function(){
+foto.addEventListener("change", () => {
+  archivoActual = foto.files[0];
+  if(!archivoActual) return;
 
-    const imagen = document.getElementById("vista");
-
-    if(this.files.length > 0){
-
-        imagen.src = URL.createObjectURL(this.files[0]);
-
-        imagen.style.display = "block";
-
-    }
-
+  vista.src = URL.createObjectURL(archivoActual);
+  vista.style.display = "block";
+  analizar.disabled = false;
+  estado.textContent = "Fotografía lista. Pulsa «Analizar formulario».";
+  resultado.style.display = "none";
 });
 
-
-/* RESULTADOS */
-
-const familias = {
-
-    escucha: {
-
-        icono:"💙",
-
-        titulo:"Familia que escucha",
-
-        mensaje:
-        "En nuestra familia estamos fortaleciendo la escucha y el diálogo.",
-
-        accion:
-        "🌱 Nuestro pequeño cambio: escuchar antes de responder y expresarnos con calma.",
-
-        senal:
-        "✨ Nuestra señal de avance: MÁS DIÁLOGO."
-
-    },
-
-    carino: {
-
-        icono:"❤️",
-
-        titulo:"Familia que acompaña con cariño",
-
-        mensaje:
-        "En nuestra familia buscamos compartir más momentos y demostrar nuestro cariño.",
-
-        accion:
-        "🌱 Nuestro pequeño cambio: dedicar un momento especial para estar juntos.",
-
-        senal:
-        "✨ Nuestra señal de avance: MÁS CERCANÍA."
-
-    },
-
-    paciencia: {
-
-        icono:"🌱",
-
-        titulo:"Familia que practica la paciencia",
-
-        mensaje:
-        "En nuestra familia estamos aprendiendo a responder con mayor calma.",
-
-        accion:
-        "🌱 Nuestro pequeño cambio: hacer una pausa antes de reaccionar.",
-
-        senal:
-        "✨ Nuestra señal de avance: MÁS CALMA."
-
-    },
-
-    acuerdos: {
-
-        icono:"🤝",
-
-        titulo:"Familia que construye acuerdos",
-
-        mensaje:
-        "En nuestra familia estamos fortaleciendo los acuerdos, los límites con cariño y la colaboración.",
-
-        accion:
-        "🌱 Nuestro pequeño cambio: conversar y tomar decisiones juntos.",
-
-        senal:
-        "✨ Nuestra señal de avance: MÁS COLABORACIÓN."
-
-    },
-
-    confianza: {
-
-        icono:"💬",
-
-        titulo:"Familia que fortalece la confianza",
-
-        mensaje:
-        "En nuestra familia estamos construyendo un espacio donde todos puedan hablar y sentirse seguros.",
-
-        accion:
-        "🌱 Nuestro pequeño cambio: escuchar sin juzgar y conversar con confianza.",
-
-        senal:
-        "✨ Nuestra señal de avance: MÁS CONFIANZA."
-
-    }
-
-};
-
-
-/* ANALIZAR FOTO */
-
-async function analizarFormulario(){
-
-    const archivoSeleccionado =
-        document.getElementById("foto").files[0];
-
-    if(!archivoSeleccionado){
-
-        alert("📸 Primero toma una fotografía del formulario.");
-
-        return;
-
-    }
-
-    const estado =
-        document.getElementById("estado");
-
-    estado.innerHTML =
-        "🔎 Estamos leyendo tu formulario...";
-
-    try{
-
-        const resultadoOCR =
-            await Tesseract.recognize(
-
-                archivoSeleccionado,
-
-                "spa",
-
-                {
-
-                    logger: function(info){
-
-                        if(info.status === "recognizing text"){
-
-                            const porcentaje =
-                                Math.round(info.progress * 100);
-
-                            estado.innerHTML =
-                                "🔎 Analizando formulario: "
-                                + porcentaje
-                                + "%";
-
-                        }
-
-                    }
-
-                }
-
-            );
-
-        const texto =
-            resultadoOCR.data.text.toLowerCase();
-
-        console.log(texto);
-
-        const familia =
-            determinarFamilia(texto);
-
-        mostrarResultado(familia);
-
-        estado.innerHTML =
-            "✅ ¡Formulario analizado!";
-
-
-    }catch(error){
-
-        console.error(error);
-
-        estado.innerHTML =
-            "❌ No pudimos leer la fotografía. Intenta tomarla nuevamente con buena iluminación.";
-
-    }
-
-}
-
-
-/* DETERMINAR FAMILIA */
-
-function determinarFamilia(texto){
-
-    let puntos = {
-
-        escucha:0,
-
-        carino:0,
-
-        paciencia:0,
-
-        acuerdos:0,
-
-        confianza:0
-
-    };
-
-
-    /* ESCUCHA */
-
-    if(
-        texto.includes("escuchar") ||
-        texto.includes("dialogo") ||
-        texto.includes("diálogo")
-    ){
-
-        puntos.escucha += 5;
-
-    }
-
-
-    if(
-        texto.includes("más diálogo") ||
-        texto.includes("mas dialogo")
-    ){
-
-        puntos.escucha += 5;
-
-    }
-
-
-    /* CARIÑO */
-
-    if(
-        texto.includes("compartir tiempo") ||
-        texto.includes("cariño") ||
-        texto.includes("carino")
-    ){
-
-        puntos.carino += 5;
-
-    }
-
-
-    /* PACIENCIA */
-
-    if(
-        texto.includes("paciencia") ||
-        texto.includes("calma") ||
-        texto.includes("tranquilidad")
-    ){
-
-        puntos.paciencia += 5;
-
-    }
-
-
-    if(
-        texto.includes("más calma") ||
-        texto.includes("mas calma")
-    ){
-
-        puntos.paciencia += 5;
-
-    }
-
-
-    /* ACUERDOS */
-
-    if(
-        texto.includes("acuerdo") ||
-        texto.includes("límites") ||
-        texto.includes("limites") ||
-        texto.includes("colaboración") ||
-        texto.includes("colaboracion")
-    ){
-
-        puntos.acuerdos += 5;
-
-    }
-
-
-    /* CONFIANZA */
-
-    if(
-        texto.includes("confianza") ||
-        texto.includes("seguridad")
-    ){
-
-        puntos.confianza += 5;
-
-    }
-
-
-    /* BUSCAR MAYOR PUNTAJE */
-
-    let familiaGanadora =
-        "escucha";
-
-    let mayor =
-        puntos.escucha;
-
-
-    for(const familia in puntos){
-
-        if(puntos[familia] > mayor){
-
-            mayor =
-                puntos[familia];
-
-            familiaGanadora =
-                familia;
-
+analizar.addEventListener("click", async () => {
+  if(!archivoActual) return;
+
+  analizar.disabled = true;
+  estado.textContent = "⏳ Leyendo el formulario…";
+
+  try{
+    const { data:{ text } } = await Tesseract.recognize(
+      archivoActual,
+      "spa",
+      {
+        logger: m => {
+          if(m.status === "recognizing text"){
+            estado.textContent = `🔎 Analizando… ${Math.round(m.progress*100)}%`;
+          }
         }
+      }
+    );
 
+    textoOCR.textContent = text;
+    mostrarResultado(text);
+    estado.textContent = "✅ Análisis terminado.";
+  }catch(error){
+    console.error(error);
+    estado.textContent = "No se pudo leer la fotografía. Puedes intentarlo nuevamente.";
+    mostrarResultado("");
+  }
+
+  analizar.disabled = false;
+});
+
+function normalizar(texto){
+  return (texto || "")
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g,"");
+}
+
+function mostrarResultado(texto){
+  const t = normalizar(texto);
+
+  // Se cuentan palabras/ideas relacionadas con cada dimensión.
+  const grupos = {
+    dialogo: [
+      "escuchar","escucha","dialogo","dialogar","hablar",
+      "expresarme","expresarnos","comunicacion","conversar"
+    ],
+    carino: [
+      "carino","cariño","acompanamiento","acompañamiento",
+      "afecto","abrazar","apoyo","apoyar"
+    ],
+    calma: [
+      "calma","paciencia","tranquilidad","tranquilo",
+      "respirar","pausa","enojo","enfado"
+    ],
+    acuerdos: [
+      "acuerdo","acuerdos","colaboracion","colaborar",
+      "cooperar","reglas","responsabilidad","familia"
+    ],
+    confianza: [
+      "confianza","seguridad","comprender","comprension",
+      "respeto","respetar","confio","contar"
+    ]
+  };
+
+  const puntajes = {};
+  for(const grupo in grupos){
+    puntajes[grupo] = grupos[grupo].reduce(
+      (total,palabra) => total + (t.includes(normalizar(palabra)) ? 1 : 0),0
+    );
+  }
+
+  let elegido = Object.keys(puntajes).reduce(
+    (a,b) => puntajes[b] > puntajes[a] ? b : a,
+    "dialogo"
+  );
+
+  const datos = {
+    dialogo:{
+      titulo:"💙 Familia que escucha",
+      mensaje:"En nuestra familia estamos fortaleciendo la escucha y el diálogo.",
+      reto:"🌱 Nuestro pequeño cambio: escuchar antes de responder y expresarnos con calma.",
+      avance:"MÁS DIÁLOGO.",
+      tipo:"dialogo"
+    },
+    carino:{
+      titulo:"❤️ Familia que acompaña con cariño",
+      mensaje:"En nuestra familia estamos fortaleciendo el cariño y el acompañamiento.",
+      reto:"🌱 Nuestro pequeño cambio: demostrar apoyo y valorar lo que cada persona siente.",
+      avance:"MÁS CARIÑO Y ACOMPAÑAMIENTO.",
+      tipo:"carino"
+    },
+    calma:{
+      titulo:"🌿 Familia que practica la paciencia",
+      mensaje:"En nuestra familia estamos aprendiendo a responder con más calma.",
+      reto:"🌱 Nuestro pequeño cambio: hacer una pausa antes de reaccionar.",
+      avance:"MÁS CALMA.",
+      tipo:"calma"
+    },
+    acuerdos:{
+      titulo:"🤝 Familia que construye acuerdos",
+      mensaje:"En nuestra familia estamos fortaleciendo la colaboración y los acuerdos.",
+      reto:"🌱 Nuestro pequeño cambio: decidir juntos y cumplir los acuerdos familiares.",
+      avance:"MÁS COLABORACIÓN.",
+      tipo:"acuerdos"
+    },
+    confianza:{
+      titulo:"💛 Familia que fortalece la confianza",
+      mensaje:"En nuestra familia estamos fortaleciendo la confianza y el respeto.",
+      reto:"🌱 Nuestro pequeño cambio: hablar con sinceridad y escucharnos sin juzgar.",
+      avance:"MÁS CONFIANZA.",
+      tipo:"confianza"
     }
+  };
 
+  const d = datos[elegido];
+  document.getElementById("titulo").textContent = d.titulo;
+  document.getElementById("mensaje").textContent = d.mensaje;
+  document.getElementById("reto").textContent = d.reto;
+  document.getElementById("avance").textContent = d.avance;
+  document.getElementById("ilustracion").innerHTML = crearFamilia(d.tipo);
 
-    return familiaGanadora;
-
+  resultado.style.display = "block";
+  resultado.scrollIntoView({behavior:"smooth"});
 }
 
+// Ilustraciones vectoriales integradas en el HTML.
+// No necesitan archivos externos y funcionan en GitHub Pages.
+function crearFamilia(tipo){
+  let extra = "";
 
-/* MOSTRAR RESULTADO */
+  if(tipo === "dialogo"){
+    extra = `
+      <path d="M135 95h75a18 18 0 0 1 18 18v28a18 18 0 0 1-18 18h-28l-14 14v-14h-33a18 18 0 0 1-18-18v-28a18 18 0 0 1 18-18z" fill="#fff"/>
+      <circle cx="153" cy="127" r="4" fill="#2f638d"/><circle cx="173" cy="127" r="4" fill="#2f638d"/><circle cx="193" cy="127" r="4" fill="#2f638d"/>
+    `;
+  } else if(tipo === "carino"){
+    extra = `<path d="M180 110c-18-25-55 2 0 48 55-46 18-73 0-48z" fill="#e85d75"/>`;
+  } else if(tipo === "calma"){
+    extra = `<path d="M205 105q18 18 0 36M225 100q25 24 0 48" fill="none" stroke="#68a77e" stroke-width="6" stroke-linecap="round"/>`;
+  } else if(tipo === "acuerdos"){
+    extra = `
+      <path d="M170 145l20 15 20-15" fill="none" stroke="#d99b42" stroke-width="8" stroke-linecap="round"/>
+      <circle cx="190" cy="105" r="16" fill="#f3c56b"/>
+    `;
+  } else {
+    extra = `<path d="M180 105c0-18 27-25 36-8 9-17 36-10 36 8 0 27-36 43-36 43s-36-16-36-43z" fill="#f4c95d"/>`;
+  }
 
-function mostrarResultado(familia){
-
-    const datos =
-        familias[familia];
-
-    document.getElementById("icono").innerHTML =
-        datos.icono;
-
-    document.getElementById("titulo").innerHTML =
-        datos.titulo;
-
-    document.getElementById("mensaje").innerHTML =
-        datos.mensaje;
-
-    document.getElementById("accion").innerHTML =
-        datos.accion;
-
-    document.getElementById("senal").innerHTML =
-        datos.senal;
-
-    document.getElementById("resultado").style.display =
-        "block";
-
-    window.scrollTo({
-
-        top:
-        document.getElementById("resultado").offsetTop,
-
-        behavior:"smooth"
-
-    });
-
+  return `
+  <svg viewBox="0 0 420 270" role="img" aria-label="Ilustración de una familia">
+    <rect x="5" y="5" width="410" height="260" rx="30" fill="#dff2e5"/>
+    <circle cx="110" cy="75" r="34" fill="#f2c6a0"/>
+    <path d="M76 78q5-50 68-20-10-38-53-22-15 10-15 42z" fill="#5b4036"/>
+    <path d="M62 190q0-80 48-80t48 80" fill="#5c8fbd"/>
+    <circle cx="215" cy="58" r="43" fill="#f2c6a0"/>
+    <path d="M174 55q8-65 82-25-20-45-67-25-16 15-15 50z" fill="#5b4036"/>
+    <path d="M162 195q0-95 53-95t53 95" fill="#7db48b"/>
+    <circle cx="315" cy="82" r="31" fill="#f2c6a0"/>
+    <path d="M284 80q8-46 61-25-8-33-48-20-13 13-13 45z" fill="#3f302c"/>
+    <path d="M275 190q0-70 40-70t40 70" fill="#d9a85d"/>
+    ${extra}
+    <path d="M80 214h240" stroke="#78a48b" stroke-width="8" stroke-linecap="round"/>
+  </svg>`;
 }
-
 </script>
-
 </body>
 </html>
